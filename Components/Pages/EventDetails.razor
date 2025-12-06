@@ -1,0 +1,211 @@
+@page "/events/{id:int}"
+@using EventEase.Models
+@using EventEase.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>@(eventItem?.Name ?? "Event Details") - EventEase</PageTitle>
+
+<div class="container mt-4">
+    @if (eventItem == null && !isLoading)
+    {
+        <div class="alert alert-warning">
+            <h4>Event Not Found</h4>
+            <p>The event you're looking for doesn't exist.</p>
+            <a href="/events" class="btn btn-primary">Back to Events</a>
+        </div>
+    }
+    else if (isLoading)
+    {
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading event details...</p>
+        </div>
+    }
+    else
+    {
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/events">Events</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@eventItem!.Name</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h1 class="card-title h2">@eventItem.Name</h1>
+                            <span class="badge bg-primary fs-6">@eventItem.Category</span>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>Event Details</h5>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-calendar-event me-2 text-primary fs-5"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Date & Time</small>
+                                            <strong>@eventItem.Date.ToString("MMMM dd, yyyy")</strong><br />
+                                            <span>@eventItem.Date.ToString("hh:mm tt")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-geo-alt me-2 text-primary fs-5"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong>@eventItem.Location</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>Description</h5>
+                            <hr />
+                            <p class="lead">@eventItem.Description</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>Attendance</h5>
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>
+                                    <i class="bi bi-people me-2 text-primary"></i>
+                                    <strong>@eventItem.CurrentAttendees</strong> of <strong>@eventItem.MaxAttendees</strong> spots filled
+                                </span>
+                                <span class="text-muted">@GetAttendancePercentage()% capacity</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar @GetProgressBarClass()" 
+                                     role="progressbar" 
+                                     style="width: @GetAttendancePercentage()%"
+                                     aria-valuenow="@GetAttendancePercentage()" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    @GetAttendancePercentage()%
+                                </div>
+                            </div>
+                            @if (IsFull())
+                            {
+                                <div class="alert alert-danger mt-3">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    This event is fully booked.
+                                </div>
+                            }
+                            else if (GetSpotsRemaining() <= 5)
+                            {
+                                <div class="alert alert-warning mt-3">
+                                    <i class="bi bi-exclamation-circle me-2"></i>
+                                    Only @GetSpotsRemaining() spots remaining!
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-body">
+                        <h5 class="card-title">Register for Event</h5>
+                        <hr />
+                        
+                        @if (IsFull())
+                        {
+                            <button class="btn btn-secondary w-100 mb-2" disabled>
+                                <i class="bi bi-x-circle me-2"></i>Event Full
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary w-100 mb-2" @onclick="RegisterForEvent">
+                                <i class="bi bi-calendar-check me-2"></i>Register Now
+                            </button>
+                        }
+                        
+                        <a href="/events" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Events
+                        </a>
+
+                        <div class="mt-4">
+                            <h6>Share This Event</h6>
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-primary flex-fill" title="Share on Facebook">
+                                    <i class="bi bi-facebook"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info flex-fill" title="Share on Twitter">
+                                    <i class="bi bi-twitter"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success flex-fill" title="Share via Email">
+                                    <i class="bi bi-envelope"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary flex-fill" title="Copy Link">
+                                    <i class="bi bi-link-45deg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Event? eventItem;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        eventItem = await EventService.GetEventByIdAsync(Id);
+        isLoading = false;
+    }
+
+    private double GetAttendancePercentage()
+    {
+        if (eventItem == null || eventItem.MaxAttendees == 0)
+            return 0;
+        
+        return Math.Round((double)eventItem.CurrentAttendees / eventItem.MaxAttendees * 100, 1);
+    }
+
+    private string GetProgressBarClass()
+    {
+        var percentage = GetAttendancePercentage();
+        if (percentage >= 90) return "bg-danger";
+        if (percentage >= 70) return "bg-warning";
+        return "bg-success";
+    }
+
+    private bool IsFull()
+    {
+        return eventItem != null && eventItem.CurrentAttendees >= eventItem.MaxAttendees;
+    }
+
+    private int GetSpotsRemaining()
+    {
+        if (eventItem == null) return 0;
+        return eventItem.MaxAttendees - eventItem.CurrentAttendees;
+    }
+
+    private void RegisterForEvent()
+    {
+        // Navigate to registration page (we'll create this next)
+        Navigation.NavigateTo($"/events/{Id}/register");
+    }
+}

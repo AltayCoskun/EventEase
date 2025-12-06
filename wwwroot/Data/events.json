@@ -1,0 +1,62 @@
+[
+  {
+    "Id": 1,
+    "Name": "Annual Tech Conference 2025",
+    "Date": "2025-03-15T09:00:00",
+    "Location": "Seattle Convention Center, WA",
+    "Description": "Join us for the biggest technology conference of the year featuring keynotes from industry leaders, workshops, and networking opportunities.",
+    "Category": "Corporate",
+    "MaxAttendees": 500,
+    "CurrentAttendees": 342
+  },
+  {
+    "Id": 2,
+    "Name": "Summer Networking Mixer",
+    "Date": "2025-06-20T18:00:00",
+    "Location": "Rooftop Gardens, San Francisco, CA",
+    "Description": "An evening of professional networking with complimentary drinks and appetizers overlooking the city skyline.",
+    "Category": "Social",
+    "MaxAttendees": 150,
+    "CurrentAttendees": 87
+  },
+  {
+    "Id": 3,
+    "Name": "Leadership Summit",
+    "Date": "2025-04-10T08:00:00",
+    "Location": "Grand Hotel, New York, NY",
+    "Description": "A full-day summit focused on leadership development, team building, and organizational excellence.",
+    "Category": "Corporate",
+    "MaxAttendees": 200,
+    "CurrentAttendees": 156
+  },
+  {
+    "Id": 4,
+    "Name": "Charity Gala Night",
+    "Date": "2025-05-25T19:00:00",
+    "Location": "City Hall Ballroom, Chicago, IL",
+    "Description": "An elegant evening supporting local charities with dinner, entertainment, and a silent auction.",
+    "Category": "Social",
+    "MaxAttendees": 300,
+    "CurrentAttendees": 245
+  },
+  {
+    "Id": 5,
+    "Name": "Product Launch Event",
+    "Date": "2025-07-08T14:00:00",
+    "Location": "Innovation Hub, Austin, TX",
+    "Description": "Be the first to see our latest product innovations with live demonstrations and Q&A sessions.",
+    "Category": "Corporate",
+    "MaxAttendees": 100,
+    "CurrentAttendees": 78
+  },
+  {
+    "Id": 6,
+    "Name": "Holiday Party 2025",
+    "Date": "2025-12-15T17:00:00",
+    "Location": "Downtown Pavilion, Boston, MA",
+    "Description": "Celebrate the holiday season with colleagues, food, music, and festivities for the whole family.",
+    "Category": "Social",
+    "MaxAttendees": 250,
+    "CurrentAttendees": 0
+  }
+]
