@@ -1,0 +1,17 @@
+version: 2.0
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 9.0
+  build:
+    commands:
+      - dotnet restore
+      - dotnet build --configuration Release
+  post_build:
+    commands:
+      - dotnet publish -c Release -o out
+artifacts:
+  files:
+    - '**/*'
+  base-directory: out
